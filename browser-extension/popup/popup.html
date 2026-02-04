@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      width: 300px;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f9fafb;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      font-weight: bold;
+      font-size: 18px;
+      color: #111827;
+      flex-grow: 1;
+    }
+
+    .status-card {
+      background: white;
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+      margin-bottom: 12px;
+    }
+
+    .status-label {
+      font-size: 12px;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    .current-site {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .tracking-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge-active {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-inactive {
+      background-color: #f3f4f6;
+      color: #374151;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-val {
+      font-weight: bold;
+      color: #3b82f6;
+    }
+
+    .btn {
+      width: 100%;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .btn:hover {
+      background-color: #1d4ed8;
+    }
+
+    .footer {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <div class="logo">EduTracker</div>
+    <div id="status-badge" class="tracking-badge badge-inactive">Inactive</div>
+  </div>
+
+  <div class="status-card">
+    <div class="status-label">Current Domain</div>
+    <div id="current-domain" class="current-site">...</div>
+  </div>
+
+  <!-- Focus Mode Control -->
+  <div class="status-card" style="text-align: center;">
+    <div class="status-label">Focus Mode (Block Sites)</div>
+    <button id="focus-toggle" class="btn" style="background-color: #7c3aed; margin-top: 8px;">Enable Focus Mode</button>
+  </div>
+
+  <!-- Manual Mode Control -->
+  <div class="status-card" style="text-align: center;">
+    <div class="status-label">Manual Study Mode</div>
+    <button id="manual-toggle" class="btn" style="background-color: #4b5563; margin-top: 8px;">Start Manual
+      Session</button>
+    <p id="manual-status" style="font-size: 10px; color: #6b7280; margin-top: 4px; display: none;">Tracking ALL sites
+    </p>
+  </div>
+
+  <div class="status-card">
+    <div class="status-label">Today's Session</div>
+    <div class="stats-row">
+      <div class="stat-item">
+        <div id="session-count" class="stat-val">0</div>
+        <div class="status-label">Sessions</div>
+      </div>
+      <div class="stat-item">
+        <div id="total-time" class="stat-val">0m</div>
+        <div class="status-label">Time</div>
+      </div>
+    </div>
+  </div>
+
+  <button id="force-sync" class="btn" style="background-color: #059669; margin-bottom: 8px;">Sync Now</button>
+  <button id="open-dashboard" class="btn">Open Dashboard</button>
+
+  <div class="footer">
+    Privacy First • Local Storage Only
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
