@@ -64,79 +64,79 @@ export default function Dashboard({ timerControls, onNavigate }) {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-blue-600 to-sky-500 rounded-3xl p-8 shadow-xl"
+        className="bg-gradient-to-r from-blue-600 to-sky-500 rounded-3xl p-6 md:p-8 shadow-xl"
       >
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-white mb-2">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2">
               {getPersonalizedQuote(user.name, getTimeOfDay())}
             </h1>
-            <p className="text-blue-100 text-lg">
+            <p className="text-blue-100 text-sm md:text-base lg:text-lg">
               {getRandomQuote()}
             </p>
           </div>
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <Avatar level={stats.level} xp={stats.xp} />
           </div>
         </div>
       </motion.div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-2xl p-6 shadow-lg border border-blue-100"
+          className="bg-white rounded-2xl p-5 md:p-6 shadow-lg border border-blue-100"
         >
           <div className="flex items-center gap-3 mb-2">
-            <Clock className="w-6 h-6 text-blue-600" />
+            <Clock className="w-5 h-5 md:w-6 h-6 text-blue-600" />
             <span className="text-blue-700 text-sm font-medium">Today</span>
           </div>
-          <div className="text-3xl font-bold text-gray-900">{dailyStats.hoursToday}h</div>
-          <div className="text-gray-600 text-sm mt-1">{dailyStats.sessionsToday} sessions</div>
+          <div className="text-2xl md:text-3xl font-bold text-gray-900">{dailyStats.hoursToday}h</div>
+          <div className="text-gray-600 text-xs md:text-sm mt-1">{dailyStats.sessionsToday} sessions</div>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100"
+          className="bg-white rounded-2xl p-5 md:p-6 shadow-lg border border-purple-100"
         >
           <div className="flex items-center gap-3 mb-2">
-            <TrendingUp className="w-6 h-6 text-purple-600" />
+            <TrendingUp className="w-5 h-5 md:w-6 h-6 text-purple-600" />
             <span className="text-purple-700 text-sm font-medium">Total Hours</span>
           </div>
-          <div className="text-3xl font-bold text-gray-900">{stats.totalHours.toFixed(1)}h</div>
-          <div className="text-gray-600 text-sm mt-1">{stats.totalSessions} sessions</div>
+          <div className="text-2xl md:text-3xl font-bold text-gray-900">{stats.totalHours.toFixed(1)}h</div>
+          <div className="text-gray-600 text-xs md:text-sm mt-1">{stats.totalSessions} sessions</div>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3 }}
-          className="bg-white rounded-2xl p-6 shadow-lg border border-orange-100"
+          className="bg-white rounded-2xl p-5 md:p-6 shadow-lg border border-orange-100"
         >
           <div className="flex items-center gap-3 mb-2">
-            <Flame className="w-6 h-6 text-orange-600" />
+            <Flame className="w-5 h-5 md:w-6 h-6 text-orange-600" />
             <span className="text-orange-700 text-sm font-medium">Streak</span>
           </div>
-          <div className="text-3xl font-bold text-gray-900">{stats.currentStreak}</div>
-          <div className="text-gray-600 text-sm mt-1">days in a row</div>
+          <div className="text-2xl md:text-3xl font-bold text-gray-900">{stats.currentStreak}</div>
+          <div className="text-gray-600 text-xs md:text-sm mt-1">days in a row</div>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.4 }}
-          className="bg-white rounded-2xl p-6 shadow-lg border border-green-100"
+          className="bg-white rounded-2xl p-5 md:p-6 shadow-lg border border-green-100"
         >
           <div className="flex items-center gap-3 mb-2">
-            <Award className="w-6 h-6 text-green-600" />
+            <Award className="w-5 h-5 md:w-6 h-6 text-green-600" />
             <span className="text-green-700 text-sm font-medium">Level</span>
           </div>
-          <div className="text-3xl font-bold text-gray-900">{stats.level}</div>
-          <div className="text-gray-600 text-sm mt-1">{stats.xp} XP</div>
+          <div className="text-2xl md:text-3xl font-bold text-gray-900">{stats.level}</div>
+          <div className="text-gray-600 text-xs md:text-sm mt-1">{stats.xp} XP</div>
         </motion.div>
       </div>
 

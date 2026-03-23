@@ -270,7 +270,7 @@ export default function NotebookPage() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-4 gap-6 min-h-[70vh]">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-[70vh]">
         {/* Notebooks Sidebar */}
         <div className="lg:col-span-1 space-y-6">
           <div className="bg-white rounded-3xl p-6 shadow-xl border border-slate-200">
@@ -367,7 +367,7 @@ export default function NotebookPage() {
         </div>
 
         {/* Main Interface */}
-        <div className="lg:col-span-3 flex flex-col h-[70vh]">
+        <div className="lg:col-span-3 flex flex-col min-h-[600px] lg:h-[70vh]">
           {selectedNote ? (
             <div className="bg-white rounded-[40px] shadow-2xl border border-slate-200 flex-1 flex flex-col overflow-hidden">
               {/* Toolbar / Header */}

@@ -117,7 +117,7 @@ export default function ChatBot() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-gradient-to-r from-blue-600 to-sky-500 text-white p-4 rounded-full shadow-2xl z-50"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-gradient-to-r from-blue-600 to-sky-500 text-white p-4 rounded-full shadow-2xl z-50"
       >
         <MessageCircle className="w-6 h-6" />
       </motion.button>
@@ -129,9 +129,13 @@ export default function ChatBot() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className={`fixed ${
-        isMinimized ? 'bottom-6 right-6 w-80' : 'bottom-6 right-6 w-96'
+        isMinimized 
+          ? 'bottom-4 right-4 sm:bottom-6 sm:right-6 w-72 sm:w-80' 
+          : 'bottom-4 right-4 sm:bottom-6 sm:right-6 w-[calc(100%-2rem)] sm:w-96'
       } bg-white rounded-2xl shadow-2xl border border-blue-100 z-50 overflow-hidden`}
-      style={{ height: isMinimized ? 'auto' : '600px' }}
+      style={{ 
+        height: isMinimized ? 'auto' : 'clamp(400px, 80vh, 600px)' 
+      }}
     >
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-sky-500 p-4 flex items-center justify-between">
@@ -158,7 +162,7 @@ export default function ChatBot() {
       {!isMinimized && (
         <>
           {/* Messages */}
-          <div className="h-96 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {messages.map((message) => (
               <motion.div
                 key={message.id}

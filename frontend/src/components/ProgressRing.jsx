@@ -16,7 +16,7 @@ export default function ProgressRing({ level, xp }) {
           cx="80"
           cy="80"
           r="54"
-          stroke="rgba(255, 255, 255, 0.1)"
+          stroke="rgba(0, 0, 0, 0.05)"
           strokeWidth="12"
           fill="none"
         />
@@ -44,9 +44,9 @@ export default function ProgressRing({ level, xp }) {
       </svg>
       
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className="text-4xl font-bold text-white">{level}</div>
-        <div className="text-xs text-purple-300">Level</div>
-        <div className="text-xs text-purple-400 mt-1">{xpInCurrentLevel}/50 XP</div>
+        <div className="text-4xl font-bold text-gray-900">{level}</div>
+        <div className="text-xs text-gray-500 font-bold uppercase tracking-widest">Level</div>
+        <div className="text-xs text-blue-600 font-black mt-1">{xpInCurrentLevel}/50 XP</div>
       </div>
     </div>
   );

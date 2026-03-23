@@ -197,10 +197,10 @@ function App() {
 
   return (
     <div className="flex min-h-screen bg-slate-50">
-      {/* Sidebar - Desktop */}
-      <aside className="hidden md:flex flex-col w-72 bg-white border-r border-slate-200 sticky top-0 h-screen overflow-y-auto z-40 shadow-sm transition-all duration-300">
+    {/* Sidebar - Desktop */}
+      <aside className="hidden lg:flex flex-col w-64 xl:w-72 bg-white border-r border-slate-200 sticky top-0 h-screen overflow-y-auto z-40 shadow-sm transition-all duration-300">
         {/* Sidebar Logo */}
-        <div className="p-6">
+        <div className="p-4 xl:p-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 flex-shrink-0">
               <span className="text-white text-xl font-black">⚡</span>
@@ -293,7 +293,7 @@ function App() {
       </aside>
 
       {/* Mobile Header */}
-      <nav className="md:hidden bg-white border-b border-slate-200 p-4 sticky top-0 z-[50] flex items-center justify-between">
+      <nav className="lg:hidden bg-white border-b border-slate-200 p-4 sticky top-0 z-[50] flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">⚡</div>
           <span className="font-black text-slate-900 tracking-tight">StudyPulse</span>
@@ -315,14 +315,14 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="md:hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60]"
+              className="lg:hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60]"
             />
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="md:hidden fixed top-0 left-0 bottom-0 w-[80%] bg-white z-[70] shadow-2xl p-6 overflow-y-auto"
+              className="lg:hidden fixed top-0 left-0 bottom-0 w-[85%] sm:w-[400px] bg-white z-[70] shadow-2xl p-6 overflow-y-auto"
             >
               <div className="flex items-center justify-between mb-8">
                  <div className="flex items-center gap-3">
@@ -367,7 +367,7 @@ function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 min-h-screen">
-        <div className="p-4 md:p-10 max-w-[1600px]">
+        <div className="p-4 lg:p-8 xl:p-10 max-w-[1600px] mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentPage}

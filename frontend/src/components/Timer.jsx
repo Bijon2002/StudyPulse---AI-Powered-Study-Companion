@@ -74,14 +74,14 @@ export default function Timer({ onSessionComplete, timerControls }) {
 
   return (
     <>
-      <div className="bg-white rounded-3xl p-8 shadow-xl border border-blue-100">
+      <div className="bg-white rounded-3xl p-6 md:p-8 shadow-xl border border-blue-100">
         <div className="flex items-center justify-center mb-6">
-          <Clock className="w-8 h-8 text-blue-600 mr-3" />
-          <h2 className="text-3xl font-bold text-gray-900">Study Timer</h2>
+          <Clock className="w-6 h-6 md:w-8 h-8 text-blue-600 mr-3" />
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Study Timer</h2>
         </div>
 
         <motion.div
-          className={`bg-gradient-to-br ${getTimerColor()} rounded-2xl p-12 mb-6 shadow-lg`}
+          className={`bg-gradient-to-br ${getTimerColor()} rounded-2xl p-8 md:p-12 mb-6 shadow-lg`}
           animate={{
             scale: isRunning && !isPaused ? [1, 1.02, 1] : 1
           }}
@@ -92,7 +92,7 @@ export default function Timer({ onSessionComplete, timerControls }) {
         >
           <div className="text-center">
             <motion.div
-              className="text-7xl font-bold text-white mb-2 font-mono"
+              className="text-5xl md:text-7xl font-bold text-white mb-2 font-mono"
               animate={{
                 opacity: isPaused ? [1, 0.5, 1] : 1
               }}
@@ -103,7 +103,7 @@ export default function Timer({ onSessionComplete, timerControls }) {
             >
               {formatTime(time)}
             </motion.div>
-            <p className="text-white/90 text-lg font-medium">
+            <p className="text-white/90 text-base md:text-lg font-medium">
               {!isRunning ? 'Ready to start' : isPaused ? 'Paused' : 'In Progress'}
             </p>
           </div>
