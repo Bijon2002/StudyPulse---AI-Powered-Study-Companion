@@ -109,13 +109,13 @@ export default function Timer({ onSessionComplete, timerControls }) {
           </div>
         </motion.div>
 
-        <div className="flex gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           {!isRunning ? (
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleStart}
-              className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all"
             >
               <Play className="w-5 h-5" />
               Start Session
@@ -126,11 +126,11 @@ export default function Timer({ onSessionComplete, timerControls }) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handlePause}
-                className={`flex items-center gap-2 ${
+                className={`w-full sm:w-auto flex items-center justify-center gap-2 ${
                   isPaused
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600'
                     : 'bg-gradient-to-r from-yellow-500 to-orange-500'
-                } text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition`}
+                } text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all`}
               >
                 {isPaused ? (
                   <>
@@ -149,7 +149,7 @@ export default function Timer({ onSessionComplete, timerControls }) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleStop}
-                className="flex items-center gap-2 bg-gradient-to-r from-red-500 to-pink-600 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-pink-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all"
               >
                 <Square className="w-5 h-5" />
                 Stop

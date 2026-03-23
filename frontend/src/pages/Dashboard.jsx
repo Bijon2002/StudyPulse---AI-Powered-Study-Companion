@@ -66,16 +66,16 @@ export default function Dashboard({ timerControls, onNavigate }) {
         animate={{ opacity: 1, y: 0 }}
         className="bg-gradient-to-r from-blue-600 to-sky-500 rounded-3xl p-6 md:p-8 shadow-xl"
       >
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="text-center md:text-left">
             <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2">
               {getPersonalizedQuote(user.name, getTimeOfDay())}
             </h1>
-            <p className="text-blue-100 text-sm md:text-base lg:text-lg">
+            <p className="text-blue-100 text-sm md:text-base lg:text-lg max-w-2xl mx-auto md:mx-0">
               {getRandomQuote()}
             </p>
           </div>
-          <div className="hidden lg:block">
+          <div className="block md:scale-90 lg:scale-100">
             <Avatar level={stats.level} xp={stats.xp} />
           </div>
         </div>
@@ -87,13 +87,13 @@ export default function Dashboard({ timerControls, onNavigate }) {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-2xl p-5 md:p-6 shadow-lg border border-blue-100"
+          className="bg-white rounded-2xl p-5 md:p-6 shadow-lg border border-blue-100 h-full"
         >
           <div className="flex items-center gap-3 mb-2">
             <Clock className="w-5 h-5 md:w-6 h-6 text-blue-600" />
             <span className="text-blue-700 text-sm font-medium">Today</span>
           </div>
-          <div className="text-2xl md:text-3xl font-bold text-gray-900">{dailyStats.hoursToday}h</div>
+          <div className="text-2xl md:text-3xl font-extrabold text-gray-900">{dailyStats.hoursToday}h</div>
           <div className="text-gray-600 text-xs md:text-sm mt-1">{dailyStats.sessionsToday} sessions</div>
         </motion.div>
 
@@ -101,13 +101,13 @@ export default function Dashboard({ timerControls, onNavigate }) {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-2xl p-5 md:p-6 shadow-lg border border-purple-100"
+          className="bg-white rounded-2xl p-5 md:p-6 shadow-lg border border-purple-100 h-full"
         >
           <div className="flex items-center gap-3 mb-2">
             <TrendingUp className="w-5 h-5 md:w-6 h-6 text-purple-600" />
             <span className="text-purple-700 text-sm font-medium">Total Hours</span>
           </div>
-          <div className="text-2xl md:text-3xl font-bold text-gray-900">{stats.totalHours.toFixed(1)}h</div>
+          <div className="text-2xl md:text-3xl font-extrabold text-gray-900">{stats.totalHours.toFixed(1)}h</div>
           <div className="text-gray-600 text-xs md:text-sm mt-1">{stats.totalSessions} sessions</div>
         </motion.div>
 
@@ -115,13 +115,13 @@ export default function Dashboard({ timerControls, onNavigate }) {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3 }}
-          className="bg-white rounded-2xl p-5 md:p-6 shadow-lg border border-orange-100"
+          className="bg-white rounded-2xl p-5 md:p-6 shadow-lg border border-orange-100 h-full"
         >
           <div className="flex items-center gap-3 mb-2">
             <Flame className="w-5 h-5 md:w-6 h-6 text-orange-600" />
             <span className="text-orange-700 text-sm font-medium">Streak</span>
           </div>
-          <div className="text-2xl md:text-3xl font-bold text-gray-900">{stats.currentStreak}</div>
+          <div className="text-2xl md:text-3xl font-extrabold text-gray-900">{stats.currentStreak}</div>
           <div className="text-gray-600 text-xs md:text-sm mt-1">days in a row</div>
         </motion.div>
 
@@ -129,30 +129,30 @@ export default function Dashboard({ timerControls, onNavigate }) {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.4 }}
-          className="bg-white rounded-2xl p-5 md:p-6 shadow-lg border border-green-100"
+          className="bg-white rounded-2xl p-5 md:p-6 shadow-lg border border-green-100 h-full"
         >
           <div className="flex items-center gap-3 mb-2">
             <Award className="w-5 h-5 md:w-6 h-6 text-green-600" />
             <span className="text-green-700 text-sm font-medium">Level</span>
           </div>
-          <div className="text-2xl md:text-3xl font-bold text-gray-900">{stats.level}</div>
+          <div className="text-2xl md:text-3xl font-extrabold text-gray-900">{stats.level}</div>
           <div className="text-gray-600 text-xs md:text-sm mt-1">{stats.xp} XP</div>
         </motion.div>
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 2xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Timer - Takes 2 columns */}
-        <div className="2xl:col-span-2">
+        <div className="lg:col-span-2">
           <Timer onSessionComplete={handleSessionComplete} timerControls={timerControls} />
         </div>
 
         {/* Progress Ring */}
-        <div className="bg-white rounded-3xl p-6 shadow-lg border border-blue-100 flex flex-col items-center justify-center">
+        <div className="bg-white rounded-3xl p-6 shadow-lg border border-blue-100 flex flex-col items-center justify-center min-h-[300px]">
           <ProgressRing level={stats.level} xp={stats.xp} />
           <div className="mt-6 text-center">
             <p className="text-gray-600 text-sm mb-2">Next Level</p>
-            <p className="text-gray-900 font-semibold">
+            <p className="text-gray-900 font-bold text-lg">
               {50 - (stats.xp % 50)} XP to go
             </p>
           </div>

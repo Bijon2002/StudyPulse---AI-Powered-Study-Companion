@@ -196,9 +196,9 @@ function App() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex h-screen bg-slate-50 overflow-hidden">
     {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex flex-col w-64 xl:w-72 bg-white border-r border-slate-200 sticky top-0 h-screen overflow-y-auto z-40 shadow-sm transition-all duration-300">
+      <aside className="hidden lg:flex flex-col w-64 xl:w-72 bg-white border-r border-slate-200 h-full overflow-y-auto z-40 shadow-sm transition-all duration-300 flex-shrink-0">
         {/* Sidebar Logo */}
         <div className="p-4 xl:p-6">
           <div className="flex items-center gap-3">
@@ -261,46 +261,18 @@ function App() {
           ))}
         </nav>
 
-        {/* User / Bottom Section */}
-        <div className="p-6 mt-auto">
-          <div className="bg-slate-50 rounded-3xl p-4 border border-slate-100 mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-600">
-                {currentUser.name.charAt(0)}
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-bold text-slate-900 truncate">{currentUser.name}</p>
-                <p className="text-xs text-slate-500 truncate">{currentUser.email}</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex gap-2">
-            <button
-               onClick={() => setCurrentPage('profile')}
-               className="flex-1 py-3 text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors"
-            >
-              Account
-            </button>
-            <button
-               onClick={handleLogout}
-               className="flex-1 py-3 text-xs font-bold text-red-600 bg-red-50 rounded-xl hover:bg-red-100 transition-colors"
-            >
-              Sign Out
-            </button>
-          </div>
-        </div>
+        {/* Sidebar Nav is now just the links */}
       </aside>
 
       {/* Mobile Header */}
-      <nav className="lg:hidden bg-white border-b border-slate-200 p-4 sticky top-0 z-[50] flex items-center justify-between">
+      <nav className="lg:hidden bg-white border-b border-slate-200 p-4 sticky top-0 z-[50] flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">⚡</div>
-          <span className="font-black text-slate-900 tracking-tight">StudyPulse</span>
+          <span className="font-black text-slate-900 tracking-tight text-lg">StudyPulse</span>
         </div>
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 bg-slate-50 rounded-xl text-slate-700 hover:bg-slate-100"
+          className="p-2 bg-slate-50 rounded-xl text-slate-700 hover:bg-slate-100 transition-colors"
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -322,41 +294,55 @@ function App() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="lg:hidden fixed top-0 left-0 bottom-0 w-[85%] sm:w-[400px] bg-white z-[70] shadow-2xl p-6 overflow-y-auto"
+              className="lg:hidden fixed top-0 left-0 bottom-0 w-[85%] sm:w-[350px] bg-white z-[70] shadow-2xl p-6 overflow-y-auto"
             >
-              <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center justify-between mb-6">
                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white">⚡</div>
-                    <span className="font-black">Menu</span>
+                  <div className="w-10 h-10 bg-blue-600 rounded-xl flex-shrink-0 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-600/20 overflow-hidden">
+                    {currentUser.profilePic ? (
+                      <img src={currentUser.profilePic} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      currentUser.name.charAt(0)
+                    )}
+                  </div>
+                    <div className="min-w-0">
+                      <p className="font-black text-slate-900 truncate">{currentUser.name}</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight truncate">{currentUser.email}</p>
+                    </div>
                  </div>
                  <button onClick={() => setMobileMenuOpen(false)} className="p-2 bg-slate-50 rounded-xl">
                    <X className="w-6 h-6 text-slate-700" />
                  </button>
               </div>
               <nav className="space-y-2">
-                 {navItems.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          setCurrentPage(item.id);
-                          setMobileMenuOpen(false);
-                        }}
-                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl font-bold transition-all ${
-                          currentPage === item.id
-                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
-                            : 'text-slate-600 hover:bg-slate-50'
-                        }`}
-                      >
-                        <Icon className="w-5 h-5" />
-                        {item.label}
-                      </button>
-                    );
-                 })}
+                 {navItems.map((group) => (
+                   <div key={group.group} className="space-y-1 mb-6">
+                     <p className="px-4 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{group.group}</p>
+                     {group.items.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => {
+                              setCurrentPage(item.id);
+                              setMobileMenuOpen(false);
+                            }}
+                            className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl font-bold transition-all ${
+                              currentPage === item.id
+                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                                : 'text-slate-600 hover:bg-slate-50'
+                            }`}
+                          >
+                            <Icon className="w-5 h-5 flex-shrink-0" />
+                            {item.label}
+                          </button>
+                        );
+                     })}
+                   </div>
+                 ))}
               </nav>
-              <div className="mt-8 pt-8 border-t border-slate-100">
-                 <button onClick={handleLogout} className="w-full py-4 text-red-600 font-black rounded-2xl bg-red-50 border border-red-100">
+              <div className="mt-8 pt-6 border-t border-slate-100">
+                 <button onClick={handleLogout} className="w-full py-4 text-red-600 font-extrabold rounded-2xl bg-red-50 border border-red-100">
                     Sign Out
                  </button>
               </div>
@@ -366,8 +352,45 @@ function App() {
       </AnimatePresence>
 
       {/* Main Content Area */}
-      <main className="flex-1 min-h-screen">
-        <div className="p-4 lg:p-8 xl:p-10 max-w-[1600px] mx-auto">
+      <main className="flex-1 h-screen overflow-y-auto min-w-0 relative flex flex-col">
+        {/* Desktop Header */}
+        <header className="hidden lg:flex items-center justify-between px-10 py-4 bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-slate-100">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-indigo-600" />
+            <span className="text-xs font-black uppercase tracking-widest text-slate-400">System Dashboard</span>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <div className="text-right hidden sm:block">
+              <p className="text-sm font-black text-slate-900 leading-tight">{currentUser.name}</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{currentUser.email}</p>
+            </div>
+            
+            <div className="flex items-center gap-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
+              <button
+                onClick={() => setCurrentPage('profile')}
+                className="px-4 py-2 text-xs font-black text-slate-600 hover:bg-white hover:shadow-sm rounded-xl transition-all"
+              >
+                Account
+              </button>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 text-xs font-black text-red-600 hover:bg-white hover:text-red-700 hover:shadow-sm rounded-xl transition-all"
+              >
+                Sign Out
+              </button>
+              <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-600/20 ml-2 overflow-hidden">
+                {currentUser.profilePic ? (
+                  <img src={currentUser.profilePic} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  currentUser.name.charAt(0)
+                )}
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div className="p-4 md:p-6 lg:p-10 max-w-[1600px] mx-auto w-full flex-1">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentPage}
@@ -395,7 +418,7 @@ function App() {
         <ChatBot />
 
         {/* Context-Aware Footer */}
-        <footer className="px-10 py-10 border-t border-slate-200 bg-white/50">
+        <footer className="px-6 md:px-10 py-10 border-t border-slate-200 bg-white/50">
           <div className="max-w-4xl opacity-50">
             <p className="text-xs font-black uppercase tracking-widest text-slate-400">© 2026 StudyPulse System</p>
             <p className="text-xs text-slate-400 mt-2 font-medium">Verified Intelligent Assistant Online • Secure Local Storage</p>

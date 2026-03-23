@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
     currentStreak: { type: Number, default: 0 },
     totalSessions: { type: Number, default: 0 }
   },
+  profilePic: {
+    type: String, // Base64 or URL
+    default: ''
+  },
   createdAt: {
     type: Date,
     default: Date.now

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, Calendar, Award, TrendingUp, Flame, Target, LogOut } from 'lucide-react';
-import { getUser, getStats, getUserSessions, logout } from '../utils/storage';
+import { User, Mail, Calendar, Award, TrendingUp, Flame, Target, LogOut, Camera } from 'lucide-react';
+import { getUser, getStats, getUserSessions, logout, updateUser } from '../utils/storage';
 import { badges } from '../data/badges';
 import { getBadges } from '../utils/storage';
 import Avatar from '../components/Avatar';
@@ -11,6 +11,7 @@ export default function Profile({ onLogout }) {
   const [stats, setStats] = useState(null);
   const [sessions, setSessions] = useState([]);
   const [earnedBadges, setEarnedBadges] = useState([]);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const userData = getUser();
@@ -29,6 +30,36 @@ export default function Profile({ onLogout }) {
     if (confirm('Are you sure you want to logout?')) {
       logout();
       onLogout();
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert('Image size should be less than 2MB');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        const updatedUser = updateUser({ profilePic: base64String });
+        setUser(updatedUser);
+        
+        // Update backend if possible
+        const token = localStorage.getItem('studypulse_token');
+        if (token) {
+          fetch('http://localhost:5000/api/auth/profile', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-auth-token': token
+            },
+            body: JSON.stringify({ profilePic: base64String })
+          }).catch(err => console.error('Failed to sync profile pic with backend:', err));
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -51,7 +82,22 @@ export default function Profile({ onLogout }) {
         className="bg-gradient-to-br from-purple-600 to-pink-600 rounded-3xl p-8 shadow-2xl"
       >
         <div className="flex flex-col md:flex-row items-center gap-6">
-          <Avatar level={stats.level} xp={stats.xp} />
+          <div className="relative group">
+            <Avatar level={stats.level} xp={stats.xp} src={user.profilePic} />
+            <button
+              onClick={() => fileInputRef.current.click()}
+              className="absolute bottom-0 right-0 bg-white/20 hover:bg-white/40 backdrop-blur-md p-2 rounded-full border border-white/30 transition-all opacity-0 group-hover:opacity-100"
+            >
+              <Camera className="w-5 h-5 text-white" />
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept="image/*"
+              className="hidden"
+            />
+          </div>
           
           <div className="flex-1 text-center md:text-left">
             <h1 className="text-4xl font-bold text-white mb-2">{user.name}</h1>

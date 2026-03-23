@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BookOpen, Plus, Trash2, Search, Brain, FileText, Upload, 
@@ -371,43 +371,43 @@ export default function NotebookPage() {
           {selectedNote ? (
             <div className="bg-white rounded-[40px] shadow-2xl border border-slate-200 flex-1 flex flex-col overflow-hidden">
               {/* Toolbar / Header */}
-              <div className="px-8 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                <div className="flex items-center gap-4">
-                  <div className="bg-blue-600 p-2.5 rounded-2xl shadow-lg shadow-blue-500/30">
-                    <Sparkles className="w-6 h-6 text-white" />
+              <div className="px-4 md:px-8 py-4 md:py-5 border-b border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-50/50">
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                  <div className="bg-blue-600 p-2.5 rounded-2xl shadow-lg shadow-blue-500/30 shrink-0">
+                    <Sparkles className="w-5 h-5 md:w-6 h-6 text-white" />
                   </div>
-                  <div>
-                    <h2 className="text-xl font-black text-slate-900 tracking-tight">{selectedNote.title}</h2>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{selectedNote.subject || 'General Studies'}</p>
+                  <div className="min-w-0">
+                    <h2 className="text-lg md:text-xl font-black text-slate-900 tracking-tight truncate">{selectedNote.title}</h2>
+                    <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{selectedNote.subject || 'General Studies'}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm">
+                <div className="flex items-center flex-wrap justify-center bg-white p-1 rounded-2xl border border-slate-200 shadow-sm w-full md:w-auto overflow-x-auto">
                   {[
                     { id: 'chat', label: 'Ask AI', icon: MessageSquare },
-                    { id: 'notebook', label: 'Notebook', icon: BookOpen },
-                    { id: 'google-ai', label: 'Google NotebookLM', icon: Sparkles },
+                    { id: 'notebook', label: 'Notes', icon: BookOpen },
+                    { id: 'google-ai', label: 'Google AI', icon: Sparkles },
                     { id: 'studio', label: 'Studio', icon: Zap }
                   ].map(tab => (
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                      className={`flex items-center gap-2 px-3 sm:px-4 md:px-6 py-2 rounded-xl text-xs md:text-sm font-bold transition-all whitespace-nowrap ${
                         activeTab === tab.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
                       }`}
                     >
-                      <tab.icon className="w-4 h-4" />
-                      {tab.label}
+                      <tab.icon className="w-3 h-3 md:w-4 h-4" />
+                      <span className="hidden xs:inline">{tab.label}</span>
                     </button>
                   ))}
                 </div>
 
-                <div className="flex gap-2">
-                   <button className="p-3 bg-white border border-slate-200 rounded-2xl text-slate-400 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm">
-                     <Download className="w-5 h-5" />
+                <div className="flex gap-2 w-full md:w-auto justify-end">
+                   <button className="p-2.5 md:p-3 bg-white border border-slate-200 rounded-xl md:rounded-2xl text-slate-400 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm">
+                     <Download className="w-4 h-4 md:w-5 h-5" />
                    </button>
-                   <button className="p-3 bg-white border border-slate-200 rounded-2xl text-slate-400 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm">
-                     <Share2 className="w-5 h-5" />
+                   <button className="p-2.5 md:p-3 bg-white border border-slate-200 rounded-xl md:rounded-2xl text-slate-400 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm">
+                     <Share2 className="w-4 h-4 md:w-5 h-5" />
                    </button>
                 </div>
               </div>

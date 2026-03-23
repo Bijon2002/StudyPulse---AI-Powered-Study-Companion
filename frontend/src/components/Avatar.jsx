@@ -10,7 +10,7 @@ const avatarStages = [
   { level: 50, emoji: '🌌', name: 'Universe', description: 'Limitless potential' }
 ];
 
-export default function Avatar({ level, xp }) {
+export default function Avatar({ level, xp, src }) {
   const currentStage = [...avatarStages]
     .reverse()
     .find(stage => level >= stage.level) || avatarStages[0];
@@ -22,20 +22,24 @@ export default function Avatar({ level, xp }) {
         whileHover={{ scale: 1.1 }}
         transition={{ type: 'spring', stiffness: 300 }}
       >
-        <div className="w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/20">
-          <motion.div
-            className="text-6xl"
-            animate={{
-              rotate: [0, 10, -10, 0],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              repeatDelay: 3
-            }}
-          >
-            {currentStage.emoji}
-          </motion.div>
+        <div className="w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/20 overflow-hidden">
+          {src ? (
+            <img src={src} alt="Profile" className="w-full h-full object-cover" />
+          ) : (
+            <motion.div
+              className="text-6xl"
+              animate={{
+                rotate: [0, 10, -10, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatDelay: 3
+              }}
+            >
+              {currentStage.emoji}
+            </motion.div>
+          )}
         </div>
         
         <motion.div

@@ -20,6 +20,16 @@ export const getUser = () => {
   return user ? JSON.parse(user) : null;
 };
 
+export const updateUser = (updatedFields) => {
+  const user = getUser();
+  if (user) {
+    const newUser = { ...user, ...updatedFields };
+    saveUser(newUser);
+    return newUser;
+  }
+  return null;
+};
+
 export const logout = () => {
   localStorage.removeItem(KEYS.USER);
 };

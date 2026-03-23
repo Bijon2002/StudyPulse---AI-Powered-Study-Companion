@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, Sparkles, Brain, FileText, CheckSquare, List, MessageSquare, Network, Lightbulb, PlayCircle, Search } from 'lucide-react';
@@ -13,7 +13,7 @@ export default function AIHub() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState('');
-  const recognitionRef = React.useRef(null);
+  const recognitionRef = useRef(null);
 
   useEffect(() => {
     setNotes(getNotes());
