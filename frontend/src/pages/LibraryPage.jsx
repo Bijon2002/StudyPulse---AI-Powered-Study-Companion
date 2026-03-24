@@ -92,12 +92,12 @@ export default function LibraryPage() {
               className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all shadow-sm"
             />
           </div>
-          <div className="flex gap-2 bg-gray-50 p-1.5 rounded-2xl border border-gray-100">
+          <div className="flex gap-2 bg-gray-50 p-1.5 rounded-2xl border border-gray-100 overflow-x-auto hide-scrollbar">
             {['all', 'pdf', 'image', 'word'].map(t => (
               <button
                 key={t}
                 onClick={() => setFilterType(t)}
-                className={`px-6 py-2 rounded-xl text-sm font-bold capitalize transition-all ${
+                className={`px-6 py-2 rounded-xl text-sm font-bold capitalize transition-all whitespace-nowrap shrink-0 ${
                   filterType === t 
                   ? 'bg-white text-blue-600 shadow-sm' 
                   : 'text-gray-500 hover:text-gray-700 hover:bg-white/50'

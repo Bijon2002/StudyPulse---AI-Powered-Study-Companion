@@ -205,7 +205,7 @@ export default function Profile({ onLogout }) {
         className="bg-gradient-to-br from-purple-900/50 to-indigo-900/50 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/20"
       >
         <h3 className="text-xl font-bold text-white mb-6">Focus Patterns</h3>
-        <div className="grid md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {Object.entries(stats.focusPatterns).map(([time, count], index) => {
             const total = Object.values(stats.focusPatterns).reduce((a, b) => a + b, 0);
             const percentage = total > 0 ? (count / total) * 100 : 0;

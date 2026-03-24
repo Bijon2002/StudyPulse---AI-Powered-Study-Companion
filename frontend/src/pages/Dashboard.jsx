@@ -5,17 +5,18 @@ import Timer from '../components/Timer';
 import ProgressRing from '../components/ProgressRing';
 import Avatar from '../components/Avatar';
 import StudyGraph from '../components/StudyGraph';
-import StreakGraph from '../components/StreakGraph';
 import Rewards from '../components/Rewards';
 import { getUser, getStats, getUserSessions } from '../utils/storage';
 import { getRandomQuote, getPersonalizedQuote } from '../data/quotes';
 import { analyzeStudyPatterns, calculateDailyStats } from '../utils/analytics';
+import axios from 'axios';
 
 export default function Dashboard({ timerControls, onNavigate }) {
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState(null);
   const [sessions, setSessions] = useState([]);
   const [insights, setInsights] = useState(null);
+  const [globalPulse, setGlobalPulse] = useState([]);
 
   useEffect(() => {
     loadData();
@@ -34,6 +35,28 @@ export default function Dashboard({ timerControls, onNavigate }) {
       const analysisResults = analyzeStudyPatterns(userSessions, userStats);
       setInsights(analysisResults);
     }
+
+    // Fetch realtime global pulse
+    axios.get('http://localhost:5000/api/users/leaderboard')
+      .then(res => {
+         const topUsers = res.data.slice(0, 3);
+         const isCurrentUserInTop3 = topUsers.some(u => u.name === userData?.name);
+         
+         if (!isCurrentUserInTop3 && userData && userStats) {
+            // Find current user's actual rank or append them
+            const currentUserRank = res.data.findIndex(u => u.name === userData.name) + 1;
+            topUsers.push({
+               name: userData.name + ' (You)',
+               rank: currentUserRank > 0 ? currentUserRank : res.data.length + 1,
+               hours: userStats.totalHours.toFixed(0),
+               streak: userStats.currentStreak,
+               isMe: true
+            });
+         }
+         
+         setGlobalPulse(topUsers);
+      })
+      .catch(err => console.error('Failed to fetch Global Pulse:', err));
   };
 
   const handleSessionComplete = () => {
@@ -75,7 +98,7 @@ export default function Dashboard({ timerControls, onNavigate }) {
               {getRandomQuote()}
             </p>
           </div>
-          <div className="block md:scale-90 lg:scale-100">
+          <div className="flex justify-center md:block shrink-0 mt-6 md:mt-0 transform scale-75 sm:scale-90 lg:scale-100">
             <Avatar level={stats.level} xp={stats.xp} />
           </div>
         </div>
@@ -162,8 +185,7 @@ export default function Dashboard({ timerControls, onNavigate }) {
       {/* Study Graph */}
       <StudyGraph sessions={sessions} period="week" />
 
-      {/* Streak Graph - GitHub Style */}
-      <StreakGraph sessions={sessions} />
+
 
       {/* Insights */}
       {insights && insights.recommendations.length > 0 && (
@@ -224,31 +246,30 @@ export default function Dashboard({ timerControls, onNavigate }) {
             </h3>
             
             <div className="space-y-4">
-               {[
-                 { name: 'Alex M.', rank: 1, hours: 142, streak: 45, status: 'Studying Math' },
-                 { name: 'Sarah K.', rank: 2, hours: 128, streak: 32, status: 'Physics Lab' },
-                 { name: 'Li Wei', rank: 3, hours: 115, streak: 28, status: 'Literature' },
-                 { name: user.name + ' (You)', rank: 142, hours: stats.totalHours.toFixed(0), streak: stats.currentStreak, isMe: true }
-               ].map((leader, i) => (
-                 <div key={i} className={`flex items-center justify-between p-4 rounded-2xl ${leader.isMe ? 'bg-blue-600/20 border border-blue-500/50 shadow-[0_0_20px_rgba(37,99,235,0.2)]' : 'bg-white/5 border border-white/10'}`}>
-                    <div className="flex items-center gap-4">
-                       <span className={`text-lg font-black ${leader.isMe ? 'text-blue-400' : 'text-slate-500'}`}>#{leader.rank}</span>
-                       <div>
-                          <p className="text-white font-bold text-sm tracking-tight">{leader.name}</p>
-                          {leader.status && (
-                             <p className="text-blue-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-1">
-                                <span className="w-1 h-1 bg-green-500 rounded-full animate-pulse" />
-                                {leader.status}
-                             </p>
-                          )}
-                       </div>
-                    </div>
-                    <div className="text-right">
-                       <p className="text-white font-black text-xs">{leader.hours}h</p>
-                       <p className="text-slate-500 text-[10px] font-bold">🔥 {leader.streak}d</p>
-                    </div>
+               {globalPulse.length > 0 ? globalPulse.map((leader, i) => (
+                  <div key={i} className={`flex items-center justify-between p-4 rounded-2xl ${leader.isMe ? 'bg-blue-600/20 border border-blue-500/50 shadow-[0_0_20px_rgba(37,99,235,0.2)]' : 'bg-white/5 border border-white/10'} gap-2`}>
+                     <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                        <span className={`text-sm sm:text-lg font-black shrink-0 ${leader.isMe ? 'text-blue-400' : 'text-slate-500'}`}>#{leader.rank}</span>
+                        <div className="min-w-0">
+                           <p className="text-white font-bold text-xs sm:text-sm tracking-tight truncate max-w-[100px] xs:max-w-[150px] sm:max-w-[200px]">{leader.name}</p>
+                           {leader.status && (
+                              <p className="text-blue-400 text-[9px] sm:text-[10px] font-black uppercase tracking-widest flex items-center gap-1">
+                                 <span className="w-1 h-1 bg-green-500 rounded-full animate-pulse shrink-0" />
+                                 <span className="truncate max-w-[100px] xs:max-w-[140px] sm:max-w-[180px]">{leader.status}</span>
+                              </p>
+                           )}
+                        </div>
+                     </div>
+                     <div className="text-right shrink-0">
+                        <p className="text-white font-black text-xs">{leader.hours}h</p>
+                        <p className="text-slate-500 text-[9px] sm:text-[10px] font-bold">🔥 {leader.streak}d</p>
+                     </div>
+                  </div>
+               )) : (
+                 <div className="text-center py-4 text-slate-500 text-sm font-medium">
+                   Loading network data...
                  </div>
-               ))}
+               )}
             </div>
             
             <button 

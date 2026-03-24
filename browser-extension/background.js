@@ -140,7 +140,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 async function loadAllowlist() {
   try {
     // Try fetching from server first
-    const response = await fetch('http://localhost:3000/api/settings/allowlist');
+    const response = await fetch('http://localhost:5000/api/settings/allowlist');
     if (response.ok) {
       const data = await response.json();
       if (data.allowlist) {
@@ -317,7 +317,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 async function updateServerAllowlist() {
   try {
-    await fetch('http://localhost:3000/api/settings/allowlist', {
+    await fetch('http://localhost:5000/api/settings/allowlist', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ allowlist: allowlist })
@@ -336,7 +336,7 @@ async function syncDataToBackend() {
   console.log("Syncing sessions to backend...", sessions);
 
   try {
-    const response = await fetch('http://localhost:3000/api/activity', {
+    const response = await fetch('http://localhost:5000/api/activity', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

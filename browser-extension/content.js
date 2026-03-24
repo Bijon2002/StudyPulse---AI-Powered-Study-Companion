@@ -11,5 +11,8 @@ window.addEventListener("message", (event) => {
         chrome.runtime.sendMessage({
             type: event.data.payload ? "START_FOCUS" : "STOP_FOCUS"
         });
+    } else if (event.data.type === "SYNC_EXTENSION_SETTINGS") {
+        console.log("Content Script forwarding SYNC request");
+        chrome.runtime.sendMessage({ type: "FORCE_SYNC" });
     }
 });

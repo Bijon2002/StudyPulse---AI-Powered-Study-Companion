@@ -1,47 +1,25 @@
-// AI utilities using free HuggingFace API (Mistral-7B for high quality)
-const HUGGINGFACE_API_KEY = import.meta.env.VITE_HUGGINGFACE_API_KEY || '';
-const MODEL_ID = 'mistralai/Mistral-7B-Instruct-v0.2';
-
-// Minimum content requirements
-const MIN_WORDS = 20;
-
 const callLLM = async (prompt, systemPrompt = "You are a helpful study assistant.", retryCount = 0) => {
   try {
-    const response = await fetch(
-      `https://api-inference.huggingface.co/models/${MODEL_ID}`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${HUGGINGFACE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          inputs: `<s>[INST] ${systemPrompt} \n\n ${prompt} [/INST]`,
-          parameters: {
-            max_new_tokens: 800,
-            temperature: 0.4, // Lower temperature for more accurate, "grounded" answers
-            top_p: 0.9,
-            return_full_text: false
-          }
-        }),
-      }
-    );
-
-    const result = await response.json();
+    const response = await fetch('https://text.pollinations.ai/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: prompt }
+        ],
+        model: 'openai'
+      }),
+    });
 
     if (response.ok) {
-      const text = result[0]?.generated_text || result.generated_text || (Array.isArray(result) ? result[0] : result);
-      return typeof text === 'string' ? text : JSON.stringify(text);
+      const text = await response.text();
+      return text;
     } 
-    
-    // Handle "Model is loading" - retry once after wait
-    if (result.error?.includes('loading') && retryCount < 1) {
-      console.log('Model is loading, waiting 10s...');
-      await new Promise(resolve => setTimeout(resolve, 10000));
-      return callLLM(prompt, systemPrompt, retryCount + 1);
-    }
 
-    console.error('API Error:', result.error || 'Unknown error');
+    console.error('API Error: Status', response.status);
     return null;
   } catch (error) {
     console.error('LLM Call Error:', error);

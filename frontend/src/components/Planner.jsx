@@ -226,6 +226,24 @@ export default function Planner() {
     }
   };
 
+  const toggleDayCompletion = (dayIndex) => {
+    const updatedTimeline = [...selectedPlan.timeline];
+    updatedTimeline[dayIndex].completed = !updatedTimeline[dayIndex].completed;
+    
+    const updatedPlan = { ...selectedPlan, timeline: updatedTimeline };
+    setSelectedPlan(updatedPlan);
+
+    if (mode === 'exam') {
+      const plans = examPlans.map(p => p.id === updatedPlan.id ? updatedPlan : p);
+      setExamPlans(plans);
+      localStorage.setItem('studypulse_exam_plans', JSON.stringify(plans));
+    } else {
+      const plans = topicPlans.map(p => p.id === updatedPlan.id ? updatedPlan : p);
+      setTopicPlans(plans);
+      localStorage.setItem('studypulse_topic_plans', JSON.stringify(plans));
+    }
+  };
+
   const viewTimeline = (plan) => {
     setSelectedPlan(plan);
     setShowTimeline(true);
@@ -237,19 +255,19 @@ export default function Planner() {
     <div className="space-y-6">
       {/* Header */}
       <div className="bg-white rounded-3xl p-6 shadow-lg border border-blue-100">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-sky-500 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-sky-500 rounded-xl flex items-center justify-center shrink-0">
               <Calendar className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">Smart Study Planner</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Smart Study Planner</h2>
               <p className="text-gray-600 text-sm">AI-powered day-by-day study plans</p>
             </div>
           </div>
           <button
             onClick={() => setShowCreatePlan(true)}
-            className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-sky-500 text-white px-4 py-2 rounded-xl font-semibold hover:shadow-lg transition"
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-sky-500 text-white px-4 py-2.5 rounded-xl font-bold hover:shadow-lg transition shrink-0"
           >
             <Plus className="w-5 h-5" />
             Create Plan
@@ -283,7 +301,7 @@ export default function Planner() {
 
       {/* Plans Grid */}
       {currentPlans.length > 0 ? (
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {currentPlans.map((plan, index) => (
             <motion.div
               key={plan.id}
@@ -574,14 +592,24 @@ export default function Planner() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="bg-gradient-to-r from-blue-50 to-sky-50 rounded-xl p-5 border-l-4 border-blue-600"
+                    className={`bg-gradient-to-r ${day.completed ? 'from-green-50 to-emerald-50 border-emerald-500' : 'from-blue-50 to-sky-50 border-blue-600'} rounded-xl p-5 border-l-4 relative`}
                   >
-                    <div className="flex items-start justify-between mb-3">
+                    <div className="absolute top-5 right-5">
+                      <button 
+                        onClick={() => toggleDayCompletion(index)}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${day.completed ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-white text-slate-500 hover:bg-blue-50 hover:text-blue-600 shadow-sm'}`}
+                      >
+                        <CheckCircle2 className={`w-4 h-4 ${day.completed ? 'text-emerald-600' : 'text-slate-400'}`} />
+                        {day.completed ? 'Completed' : 'Mark Done'}
+                      </button>
+                    </div>
+
+                    <div className="flex items-start justify-between mb-3 pr-28">
                       <div>
-                        <h4 className="text-lg font-bold text-gray-900">
+                        <h4 className={`text-lg font-bold ${day.completed ? 'text-emerald-900 line-through opacity-70' : 'text-gray-900'}`}>
                           Day {day.day} - {day.date}
                         </h4>
-                        <p className="text-blue-600 font-semibold text-sm">{day.phase}</p>
+                        <p className={`${day.completed ? 'text-emerald-600 opacity-80' : 'text-blue-600'} font-semibold text-sm`}>{day.phase}</p>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
                         <Clock className="w-4 h-4" />

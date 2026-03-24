@@ -11,24 +11,50 @@ export default function Whiteboard({ roomId }) {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    canvas.width = canvas.offsetWidth * 2;
-    canvas.height = canvas.offsetHeight * 2;
-    canvas.style.width = `${canvas.offsetWidth}px`;
-    canvas.style.height = `${canvas.offsetHeight}px`;
+    const parent = canvas.parentElement;
 
-    const context = canvas.getContext('2d');
-    context.scale(2, 2);
-    context.lineCap = 'round';
-    context.lineJoin = 'round';
-    contextRef.current = context;
+    const initializeCanvas = () => {
+      if (!parent || parent.clientWidth === 0) return;
+      
+      const width = parent.clientWidth;
+      const height = parent.clientHeight;
+      
+      // Save what's currently on canvas if we are doing a mid-flight resize
+      let currentDrawing = null;
+      if (canvas.width > 0 && contextRef.current) {
+         currentDrawing = canvas.toDataURL();
+      }
 
-    // Load saved drawing if exists
-    const saved = localStorage.getItem(`whiteboard_${roomId}`);
-    if (saved) {
-      const img = new Image();
-      img.onload = () => context.drawImage(img, 0, 0, canvas.width/2, canvas.height/2);
-      img.src = saved;
+      canvas.width = width * 2;
+      canvas.height = height * 2;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+
+      const context = canvas.getContext('2d');
+      context.scale(2, 2);
+      context.lineCap = 'round';
+      context.lineJoin = 'round';
+      contextRef.current = context;
+
+      // Prioritize mid-flight resize drawing, otherwise local storage 
+      const sourceToLoad = currentDrawing || localStorage.getItem(`whiteboard_${roomId}`);
+      if (sourceToLoad && sourceToLoad !== 'data:,') {
+        const img = new Image();
+        img.onload = () => context.drawImage(img, 0, 0, width, height);
+        img.src = sourceToLoad;
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+       // Debounce slightly to prevent thrashing
+       requestAnimationFrame(() => initializeCanvas());
+    });
+    
+    if (parent) {
+       resizeObserver.observe(parent);
     }
+
+    return () => resizeObserver.disconnect();
   }, [roomId]);
 
   const startDrawing = ({ nativeEvent }) => {
@@ -151,9 +177,6 @@ export default function Whiteboard({ roomId }) {
         />
       </div>
 
-      <div className="p-2 bg-slate-50 border-t border-slate-100 flex justify-center">
-        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Real-time Collaborative Canvas Active</p>
-      </div>
     </div>
   );
 }

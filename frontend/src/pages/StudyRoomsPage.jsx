@@ -289,16 +289,16 @@ export default function StudyRoomsPage() {
       <div className="space-y-6">
         {/* Room Header */}
         <div className="bg-white rounded-3xl p-6 shadow-lg border border-blue-100">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">{selectedRoom.name}</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">{selectedRoom.name}</h2>
               <p className="text-gray-600">Room Code: <span className="font-mono font-bold text-blue-600">{selectedRoom.code}</span></p>
             </div>
             <button
               onClick={leaveRoom}
-              className="flex items-center gap-2 bg-red-100 text-red-700 px-4 py-2 rounded-xl font-semibold hover:bg-red-200 transition"
+              className="flex items-center justify-center gap-2 bg-red-100 text-red-700 px-4 py-2 rounded-xl font-semibold hover:bg-red-200 transition shrink-0"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 shrink-0" />
               Leave Room
             </button>
           </div>
@@ -372,8 +372,8 @@ export default function StudyRoomsPage() {
 
             {/* Tabs */}
             <div className="bg-white rounded-3xl shadow-lg border border-blue-100">
-              <div className="border-b border-gray-200 px-6 pt-4">
-                <div className="flex gap-4">
+              <div className="border-b border-gray-200 px-4 sm:px-6 pt-4">
+                <div className="flex gap-2 sm:gap-4 overflow-x-auto hide-scrollbar pb-1">
                   {[
                     { id: 'documents', label: 'Documents', icon: FileText },
                     { id: 'chat', label: 'Chat', icon: MessageSquare },
@@ -385,13 +385,13 @@ export default function StudyRoomsPage() {
                       <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`flex items-center gap-2 px-4 py-2 border-b-2 transition ${
+                        className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 border-b-2 transition whitespace-nowrap shrink-0 text-xs sm:text-sm ${
                           activeTab === tab.id
-                            ? 'border-blue-600 text-blue-600'
-                            : 'border-transparent text-gray-600 hover:text-gray-900'
+                            ? 'border-blue-600 text-blue-600 font-bold'
+                            : 'border-transparent text-gray-500 hover:text-gray-900'
                         }`}
                       >
-                        <Icon className="w-4 h-4" />
+                        <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                         {tab.label}
                       </button>
                     );
@@ -658,7 +658,7 @@ export default function StudyRoomsPage() {
       </div>
 
       {/* Actions */}
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <button
           onClick={() => setShowCreateRoom(true)}
           className="bg-gradient-to-r from-blue-600 to-sky-500 text-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition"

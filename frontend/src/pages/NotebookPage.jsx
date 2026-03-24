@@ -238,19 +238,19 @@ export default function NotebookPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="bg-white rounded-3xl p-6 shadow-lg border border-blue-100">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-sky-500 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-sky-500 rounded-xl flex items-center justify-center shrink-0">
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">AI Notebook</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">AI Notebook</h2>
               <p className="text-gray-600 text-sm">NotebookLM-style AI analysis & collaboration</p>
             </div>
           </div>
           <button
             onClick={() => setShowAddNote(true)}
-            className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-sky-500 text-white px-4 py-2 rounded-xl font-semibold hover:shadow-lg transition"
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-sky-500 text-white px-4 py-2.5 rounded-xl font-semibold hover:shadow-lg transition w-full sm:w-auto shrink-0"
           >
             <Plus className="w-5 h-5" />
             New Notebook
@@ -270,7 +270,7 @@ export default function NotebookPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-[70vh]">
+      <div className={`flex lg:grid lg:grid-cols-4 gap-6 min-h-[70vh] ${selectedNote ? 'flex-col-reverse' : 'flex-col'}`}>
         {/* Notebooks Sidebar */}
         <div className="lg:col-span-1 space-y-6">
           <div className="bg-white rounded-3xl p-6 shadow-xl border border-slate-200">
@@ -382,7 +382,7 @@ export default function NotebookPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center flex-wrap justify-center bg-white p-1 rounded-2xl border border-slate-200 shadow-sm w-full md:w-auto overflow-x-auto">
+                <div className="flex items-center flex-nowrap justify-center bg-white p-1 rounded-2xl border border-slate-200 shadow-sm w-full md:w-auto overflow-x-auto hide-scrollbar scroll-smooth">
                   {[
                     { id: 'chat', label: 'Ask AI', icon: MessageSquare },
                     { id: 'notebook', label: 'Notes', icon: BookOpen },
@@ -468,10 +468,10 @@ export default function NotebookPage() {
                               type="text"
                               value={chatInput}
                               onChange={(e) => setChatInput(e.target.value)}
-                              placeholder="Ask a question about your sources..."
-                              className="w-full pl-8 pr-32 py-5 bg-white border-2 border-slate-100 rounded-[28px] text-slate-800 font-bold focus:outline-none focus:border-blue-600 transition-all shadow-xl relative z-10"
+                              placeholder="Ask a question..."
+                              className="w-full pl-6 pr-[100px] sm:pr-32 py-4 sm:py-5 bg-white border-2 border-slate-100 rounded-[24px] sm:rounded-[28px] text-slate-800 font-bold focus:outline-none focus:border-blue-600 transition-all shadow-xl relative z-10 text-sm sm:text-base"
                             />
-                            <button className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-blue-600 text-white px-6 py-2.5 rounded-2xl font-black text-xs hover:bg-blue-700 transition shadow-lg shadow-blue-600/20 active:scale-95">
+                            <button className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-xs hover:bg-blue-700 transition shadow-lg shadow-blue-600/20 active:scale-95 shrink-0">
                               Ask AI
                             </button>
                           </form>
@@ -481,7 +481,7 @@ export default function NotebookPage() {
 
                   {activeTab === 'notebook' && (
                     <div className="max-w-5xl mx-auto space-y-10">
-                       <div className="flex items-center justify-between">
+                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                          <h3 className="text-3xl font-black text-slate-900 tracking-tight">Main Notes</h3>
                          <button 
                            onClick={() => {

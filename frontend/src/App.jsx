@@ -9,12 +9,11 @@ import PlannerPage from './pages/PlannerPage';
 import StudyRoomsPage from './pages/StudyRoomsPage';
 import NotebookPage from './pages/NotebookPage';
 import Profile from './pages/Profile';
-import AIHub from './pages/AIHub';
 import FocusPage from './pages/FocusPage';
 import LibraryPage from './pages/LibraryPage';
-import SkillLab from './pages/SkillLab';
 import Community from './pages/Community';
 import WhiteboardPage from './pages/WhiteboardPage';
+import ExtensionManager from './pages/ExtensionManager';
 import ChatBot from './components/ChatBot';
 import { getUser } from './utils/storage';
 
@@ -176,13 +175,9 @@ function App() {
   const navItems = [
     { group: 'Core Dashboard', items: [
       { id: 'dashboard', label: 'Overview', icon: Home },
+      { id: 'planner', label: 'Study Planner', icon: Calendar },
       { id: 'focus', label: 'Focus Guardian', icon: Clock },
       { id: 'notebook', label: 'Daily Notes', icon: BookOpen },
-    ]},
-    { group: 'Intelligence', items: [
-      { id: 'ai-hub', label: 'AI Study Hub', icon: Zap },
-      { id: 'skill-lab', label: 'Skill Lab', icon: Rocket },
-      { id: 'planner', label: 'Study Planner', icon: Calendar },
     ]},
     { group: 'Collaborative', items: [
       { id: 'rooms', label: 'Study Rooms', icon: Users },
@@ -191,12 +186,13 @@ function App() {
     ]},
     { group: 'System', items: [
       { id: 'library', label: 'Resource Library', icon: Library },
+      { id: 'extension', label: 'Extension Guard', icon: Zap },
       { id: 'profile', label: 'My Profile', icon: UserIcon },
     ]}
   ];
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden">
+    <div className="flex flex-col lg:flex-row h-screen w-full bg-slate-50 overflow-hidden">
     {/* Sidebar - Desktop */}
       <aside className="hidden lg:flex flex-col w-64 xl:w-72 bg-white border-r border-slate-200 h-full overflow-y-auto z-40 shadow-sm transition-all duration-300 flex-shrink-0">
         {/* Sidebar Logo */}
@@ -265,17 +261,30 @@ function App() {
       </aside>
 
       {/* Mobile Header */}
-      <nav className="lg:hidden bg-white border-b border-slate-200 p-4 sticky top-0 z-[50] flex items-center justify-between shadow-sm">
+      <nav className="lg:hidden w-full flex-shrink-0 bg-white border-b border-slate-200 p-4 sticky top-0 z-[50] flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">⚡</div>
           <span className="font-black text-slate-900 tracking-tight text-lg">StudyPulse</span>
         </div>
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 bg-slate-50 rounded-xl text-slate-700 hover:bg-slate-100 transition-colors"
-        >
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="flex items-center gap-2">
+           <a 
+             href="/studypulse-extension.zip"
+             download="StudyPulse-Extension.zip"
+             onClick={() => {
+               alert("Extension downloaded! Extract the ZIP and load it via your browser's extension page (Enable Developer Mode -> Load Unpacked).");
+             }}
+             className="flex items-center justify-center p-2 bg-indigo-50 text-indigo-600 rounded-xl border border-indigo-100 hover:bg-indigo-100 transition-colors"
+             title="Download StudyPulse Extension"
+           >
+             <Zap className="w-5 h-5" />
+           </a>
+           <button
+             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+             className="p-2 bg-slate-50 rounded-xl text-slate-700 hover:bg-slate-100 transition-colors"
+           >
+             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+           </button>
+        </div>
       </nav>
 
       {/* Mobile Drawer */}
@@ -352,12 +361,26 @@ function App() {
       </AnimatePresence>
 
       {/* Main Content Area */}
-      <main className="flex-1 h-screen overflow-y-auto min-w-0 relative flex flex-col">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden min-w-0 relative flex flex-col w-full h-full">
         {/* Desktop Header */}
         <header className="hidden lg:flex items-center justify-between px-10 py-4 bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-slate-100">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-indigo-600" />
-            <span className="text-xs font-black uppercase tracking-widest text-slate-400">System Dashboard</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-indigo-600" />
+              <span className="text-xs font-black uppercase tracking-widest text-slate-400">System Dashboard</span>
+            </div>
+            <a 
+              href="/studypulse-extension.zip"
+              download="StudyPulse-Extension.zip"
+              onClick={() => {
+                alert("Extension downloaded! Extract the ZIP and load it via chrome://extensions (Enable Developer Mode -> Load Unpacked).");
+              }}
+              className="hidden md:flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-indigo-100 transition-colors border border-indigo-200 shadow-sm"
+              title="Download the StudyPulse browser extension"
+            >
+              <Zap className="w-4 h-4" />
+              Enable Extension
+            </a>
           </div>
 
           <div className="flex items-center gap-6">
@@ -403,10 +426,9 @@ function App() {
               {currentPage === 'planner' && <PlannerPage />}
               {currentPage === 'rooms' && <StudyRoomsPage />}
               {currentPage === 'notebook' && <NotebookPage />}
-              {currentPage === 'ai-hub' && <AIHub />}
-              {currentPage === 'skill-lab' && <SkillLab />}
               {currentPage === 'community' && <Community />}
               {currentPage === 'whiteboard' && <WhiteboardPage />}
+              {currentPage === 'extension' && <ExtensionManager />}
               {currentPage === 'focus' && <FocusPage timerControls={timerControls} />}
               {currentPage === 'library' && <LibraryPage />}
               {currentPage === 'profile' && <Profile onLogout={handleLogout} />}

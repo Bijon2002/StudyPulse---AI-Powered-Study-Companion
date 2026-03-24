@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "EduTracker - Learning Activity Tracker",
+  "name": "StudyPulse System",
   "version": "1.0.0",
-  "description": "Tracks time spent on approved learning websites.",
+  "description": "The official StudyPulse companion extension for deep-work tracking.",
   "permissions": [
     "tabs",
     "storage",
@@ -15,7 +15,7 @@
   ],
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "EduTracker"
+    "default_title": "StudyPulse"
   },
   "background": {
     "service_worker": "background.js"

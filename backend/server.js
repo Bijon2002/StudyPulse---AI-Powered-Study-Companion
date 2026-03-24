@@ -13,9 +13,15 @@ app.use(express.json());
 // Routes
 const authRoutes = require('./routes/auth');
 const noteRoutes = require('./routes/notes');
+const userRoutes = require('./routes/users');
+const settingsRoutes = require('./routes/settings');
+const activityRoutes = require('./routes/activity');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/notes', noteRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/settings', settingsRoutes);
+app.use('/api/activity', activityRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

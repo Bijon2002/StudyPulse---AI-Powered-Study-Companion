@@ -1,18 +1,19 @@
 import { motion } from 'framer-motion';
 
 export default function StreakGraph({ sessions = [] }) {
-  // Generate last 365 days
+  // Generate last 30 days (1 month)
   const generateDays = () => {
     const days = [];
     const today = new Date();
     
-    for (let i = 364; i >= 0; i--) {
+    for (let i = 29; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
       days.push({
         date: date.toISOString().split('T')[0],
         dayOfWeek: date.getDay(),
         month: date.getMonth(),
+        dayOfMonth: date.getDate(),
         count: 0
       });
     }
@@ -33,17 +34,18 @@ export default function StreakGraph({ sessions = [] }) {
 
   // Get color based on count
   const getColor = (count) => {
-    if (count === 0) return 'bg-gray-100';
-    if (count === 1) return 'bg-blue-200';
-    if (count === 2) return 'bg-blue-400';
-    if (count === 3) return 'bg-blue-600';
-    return 'bg-blue-800';
+    if (count === 0) return '#e5e7eb';
+    if (count === 1) return '#93c5fd';
+    if (count === 2) return '#60a5fa';
+    if (count === 3) return '#2563eb';
+    return '#1e40af';
   };
 
   // Get tooltip text
   const getTooltip = (day) => {
     const date = new Date(day.date);
     const formatted = date.toLocaleDateString('en-US', { 
+      weekday: 'short',
       month: 'short', 
       day: 'numeric', 
       year: 'numeric' 
@@ -71,7 +73,10 @@ export default function StreakGraph({ sessions = [] }) {
     }
   });
 
-  // Month labels
+  // Day labels
+  const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  // Month labels from the data
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const monthLabels = [];
   let lastMonth = -1;
@@ -87,50 +92,214 @@ export default function StreakGraph({ sessions = [] }) {
     }
   });
 
+  // Calculate current streak
+  const calculateStreak = () => {
+    let streak = 0;
+    for (let i = days.length - 1; i >= 0; i--) {
+      if (days[i].count > 0) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+    return streak;
+  };
+
+  const currentStreak = calculateStreak();
+
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg border border-blue-100">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-bold text-gray-900">📅 Study Streak</h3>
-        <div className="flex items-center gap-2 text-xs text-gray-600">
+    <div style={{
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+      borderRadius: '20px',
+      padding: '28px',
+      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+      border: '1px solid rgba(59, 130, 246, 0.15)',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Background glow effects */}
+      <div style={{
+        position: 'absolute',
+        top: '-50px',
+        right: '-50px',
+        width: '200px',
+        height: '200px',
+        background: 'radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%)',
+        borderRadius: '50%',
+        pointerEvents: 'none'
+      }} />
+      <div style={{
+        position: 'absolute',
+        bottom: '-30px',
+        left: '-30px',
+        width: '150px',
+        height: '150px',
+        background: 'radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 70%)',
+        borderRadius: '50%',
+        pointerEvents: 'none'
+      }} />
+
+      {/* Header */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '16px',
+        justifyContent: 'space-between',
+        marginBottom: '20px',
+        position: 'relative',
+        zIndex: 1
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+            borderRadius: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '20px',
+            boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)'
+          }}>
+            📅
+          </div>
+          <div>
+            <h3 style={{
+              fontSize: '18px',
+              fontWeight: '800',
+              color: '#f8fafc',
+              margin: 0,
+              letterSpacing: '-0.02em'
+            }}>Study Streak</h3>
+            <p style={{
+              fontSize: '12px',
+              color: '#64748b',
+              margin: '2px 0 0 0',
+              fontWeight: '500'
+            }}>Last 30 days</p>
+          </div>
+        </div>
+        
+        {/* Legend */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          fontSize: '11px',
+          color: '#94a3b8',
+          fontWeight: '500'
+        }}>
           <span>Less</span>
-          <div className="flex gap-1">
-            <div className="w-3 h-3 bg-gray-100 rounded-sm"></div>
-            <div className="w-3 h-3 bg-blue-200 rounded-sm"></div>
-            <div className="w-3 h-3 bg-blue-400 rounded-sm"></div>
-            <div className="w-3 h-3 bg-blue-600 rounded-sm"></div>
-            <div className="w-3 h-3 bg-blue-800 rounded-sm"></div>
+          <div style={{ display: 'flex', gap: '3px' }}>
+            {['#e5e7eb', '#93c5fd', '#60a5fa', '#2563eb', '#1e40af'].map((color, i) => (
+              <div key={i} style={{
+                width: '12px',
+                height: '12px',
+                backgroundColor: color,
+                borderRadius: '3px',
+                opacity: 0.9
+              }} />
+            ))}
           </div>
           <span>More</span>
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <div className="inline-block min-w-full">
-          {/* Month labels */}
-          <div className="flex mb-2">
-            {monthLabels.map((label, index) => (
-              <div
-                key={index}
-                className="text-xs text-gray-600"
-                style={{ marginLeft: `${label.weekIndex * 14}px` }}
-              >
-                {label.month}
+      {/* Streak badge */}
+      {currentStreak > 0 && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            background: 'linear-gradient(135deg, rgba(251, 146, 60, 0.15), rgba(239, 68, 68, 0.1))',
+            border: '1px solid rgba(251, 146, 60, 0.25)',
+            borderRadius: '20px',
+            padding: '6px 14px',
+            marginBottom: '18px',
+            position: 'relative',
+            zIndex: 1
+          }}
+        >
+          <span style={{ fontSize: '14px' }}>🔥</span>
+          <span style={{
+            fontSize: '13px',
+            fontWeight: '700',
+            color: '#fb923c',
+            letterSpacing: '-0.01em'
+          }}>{currentStreak} day streak!</span>
+        </motion.div>
+      )}
+
+      {/* Heatmap Grid */}
+      <div className="hide-scrollbar" style={{ position: 'relative', zIndex: 1, overflowX: 'auto', paddingBottom: '8px' }}>
+        {/* Month labels */}
+        <div style={{ display: 'flex', marginBottom: '8px', paddingLeft: '36px' }}>
+          {monthLabels.map((label, index) => (
+            <div
+              key={index}
+              style={{
+                fontSize: '11px',
+                color: '#64748b',
+                fontWeight: '600',
+                position: 'relative',
+                left: `${label.weekIndex * 20}px`
+              }}
+            >
+              {label.month}
+            </div>
+          ))}
+        </div>
+
+        <div style={{ display: 'flex', gap: '0' }}>
+          {/* Day labels on the left */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+            marginRight: '8px',
+            paddingTop: '0'
+          }}>
+            {dayLabels.map((label, i) => (
+              <div key={i} style={{
+                height: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                fontSize: '10px',
+                color: '#475569',
+                fontWeight: '600',
+                width: '28px',
+                justifyContent: 'flex-end'
+              }}>
+                {i % 2 === 1 ? label : ''}
               </div>
             ))}
           </div>
 
           {/* Grid */}
-          <div className="flex gap-1">
+          <div style={{ display: 'flex', gap: '4px' }}>
             {weeks.map((week, weekIndex) => (
-              <div key={weekIndex} className="flex flex-col gap-1">
+              <div key={weekIndex} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 {[0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
                   const day = week.find(d => d.dayOfWeek === dayOfWeek);
                   
                   return (
                     <motion.div
                       key={dayOfWeek}
-                      whileHover={{ scale: 1.5 }}
-                      className={`w-3 h-3 rounded-sm ${day ? getColor(day.count) : 'bg-transparent'} cursor-pointer`}
+                      whileHover={{ scale: 1.4, zIndex: 10 }}
+                      style={{
+                        width: '16px',
+                        height: '16px',
+                        borderRadius: '4px',
+                        backgroundColor: day ? getColor(day.count) : 'transparent',
+                        cursor: day ? 'pointer' : 'default',
+                        transition: 'all 0.15s ease',
+                        position: 'relative',
+                        outline: day && day.count > 0 ? `1px solid rgba(255,255,255,0.05)` : 'none'
+                      }}
                       title={day ? getTooltip(day) : ''}
                     />
                   );
@@ -138,41 +307,10 @@ export default function StreakGraph({ sessions = [] }) {
               </div>
             ))}
           </div>
-
-          {/* Day labels */}
-          <div className="flex flex-col gap-1 mt-2 text-xs text-gray-600">
-            <div style={{ height: '12px' }}>Mon</div>
-            <div style={{ height: '12px' }}></div>
-            <div style={{ height: '12px' }}>Wed</div>
-            <div style={{ height: '12px' }}></div>
-            <div style={{ height: '12px' }}>Fri</div>
-            <div style={{ height: '12px' }}></div>
-            <div style={{ height: '12px' }}>Sun</div>
-          </div>
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
-        <div className="text-center">
-          <div className="text-2xl font-bold text-blue-600">
-            {sessions.length}
-          </div>
-          <div className="text-xs text-gray-600">Total Sessions</div>
-        </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-green-600">
-            {days.filter(d => d.count > 0).length}
-          </div>
-          <div className="text-xs text-gray-600">Active Days</div>
-        </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-orange-600">
-            {Math.max(...days.map(d => d.count), 0)}
-          </div>
-          <div className="text-xs text-gray-600">Best Day</div>
-        </div>
-      </div>
+
     </div>
   );
 }
