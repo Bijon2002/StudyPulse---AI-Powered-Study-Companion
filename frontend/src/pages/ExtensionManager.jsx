@@ -5,11 +5,13 @@ import axios from 'axios';
 
 export default function ExtensionManager() {
   const [allowlist, setAllowlist] = useState([]);
+  const [sessions, setSessions] = useState([]);
   const [newDomain, setNewDomain] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     fetchSettings();
+    fetchActivity();
   }, []);
 
   const fetchSettings = async () => {
@@ -21,19 +23,27 @@ export default function ExtensionManager() {
     }
   };
 
+  const fetchActivity = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/activity');
+      if (res.data.sessions) setSessions(res.data.sessions);
+    } catch (err) {
+      console.error('Failed to load extension activity:', err);
+    }
+  };
+
   const handleSave = async () => {
     setIsSaving(true);
     try {
       await axios.post('http://localhost:5000/api/settings/allowlist', { allowlist });
       
       // Ping the deeply-integrated browser extension content.js 
-      // This tells the backend extension orchestrator to immediately reload rules
       window.postMessage({ type: 'SYNC_EXTENSION_SETTINGS' }, '*');
       
-      alert('Extension connection synchronized successfully! If Focus Mode is running, the rules apply immediately.');
+      alert('Extension connection synchronized successfully!');
     } catch (err) {
       console.error('Failed to save settings:', err);
-      alert('Failed to save settings. Please ensure the backend is running.');
+      alert('Failed to save settings.');
     } finally {
       setIsSaving(false);
     }
@@ -185,6 +195,63 @@ export default function ExtensionManager() {
               </div>
            </div>
         </div>
+      </div>
+
+      {/* Session History Section */}
+      <div className="bg-white rounded-[32px] border border-slate-200 p-8 shadow-sm">
+         <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+               <Zap className="w-5 h-5 text-amber-500" />
+               <h2 className="text-xl font-black text-slate-900">Recent Tracking Logs</h2>
+            </div>
+            <button 
+               onClick={fetchActivity}
+               className="text-xs font-black text-indigo-600 uppercase tracking-widest hover:text-indigo-700"
+            >
+               Refresh Logs
+            </button>
+         </div>
+
+         <div className="overflow-x-auto">
+            <table className="w-full text-left">
+               <thead>
+                  <tr className="border-b border-slate-100">
+                     <th className="pb-4 font-black text-[10px] uppercase tracking-widest text-slate-400">Domain</th>
+                     <th className="pb-4 font-black text-[10px] uppercase tracking-widest text-slate-400">Duration</th>
+                     <th className="pb-4 font-black text-[10px] uppercase tracking-widest text-slate-400">Date & Time</th>
+                     <th className="pb-4 font-black text-[10px] uppercase tracking-widest text-slate-400">Status</th>
+                  </tr>
+               </thead>
+               <tbody className="divide-y divide-slate-50">
+                  {sessions.length === 0 ? (
+                     <tr>
+                        <td colSpan="4" className="py-12 text-center text-slate-400 font-medium">
+                           No activity recorded yet. Activate Focus Mode in the extension to start tracking.
+                        </td>
+                     </tr>
+                  ) : (
+                     sessions.map((session, i) => (
+                        <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                           <td className="py-4 font-bold text-slate-700">{session.domain}</td>
+                           <td className="py-4">
+                              <span className="font-black text-indigo-600">
+                                 {Math.floor(session.duration / 60)}m {Math.floor(session.duration % 60)}s
+                              </span>
+                           </td>
+                           <td className="py-4 text-xs font-medium text-slate-500">
+                              {new Date(session.timestamp).toLocaleString()}
+                           </td>
+                           <td className="py-4">
+                              <span className="px-2 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase rounded-lg">
+                                 Synced
+                              </span>
+                           </td>
+                        </tr>
+                     ))
+                  )}
+               </tbody>
+            </table>
+         </div>
       </div>
     </div>
   );
