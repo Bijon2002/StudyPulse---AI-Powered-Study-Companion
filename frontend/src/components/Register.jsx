@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, Mail, Lock, UserPlus, Zap } from 'lucide-react';
 import { saveUser } from '../utils/storage';
+import api from '../utils/api';
 
 export default function Register({ onRegister, onSwitchToLogin }) {
   const [formData, setFormData] = useState({
@@ -19,7 +20,7 @@ export default function Register({ onRegister, onSwitchToLogin }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -38,28 +39,23 @@ export default function Register({ onRegister, onSwitchToLogin }) {
       return;
     }
 
-    // Save user to localStorage (mock registration)
-    const users = JSON.parse(localStorage.getItem('studypulse_users') || '[]');
-    
-    if (users.find(u => u.email === formData.email)) {
-      setError('Email already registered');
-      return;
+    try {
+      const response = await api.post('/api/auth/register', {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      });
+      
+      const { token, user } = response.data;
+      
+      // Save token for the interceptor
+      localStorage.setItem('studypulse_token', token);
+      
+      saveUser(user);
+      onRegister(user);
+    } catch (err) {
+      setError(err.response?.data?.msg || 'Registration failed');
     }
-
-    const newUser = {
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-      avatar: '🎓',
-      joinedAt: new Date().toISOString()
-    };
-
-    users.push(newUser);
-    localStorage.setItem('studypulse_users', JSON.stringify(users));
-
-    const { password: _, ...userWithoutPassword } = newUser;
-    saveUser(userWithoutPassword);
-    onRegister(userWithoutPassword);
   };
 
   return (

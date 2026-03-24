@@ -9,7 +9,7 @@ import Rewards from '../components/Rewards';
 import { getUser, getStats, getUserSessions } from '../utils/storage';
 import { getRandomQuote, getPersonalizedQuote } from '../data/quotes';
 import { analyzeStudyPatterns, calculateDailyStats } from '../utils/analytics';
-import axios from 'axios';
+import api from '../utils/api';
 
 export default function Dashboard({ timerControls, onNavigate }) {
   const [user, setUser] = useState(null);
@@ -37,7 +37,7 @@ export default function Dashboard({ timerControls, onNavigate }) {
     }
 
     // Fetch realtime global pulse
-    axios.get('http://localhost:5000/api/users/leaderboard')
+    api.get('/api/users/leaderboard')
       .then(res => {
          const topUsers = res.data.slice(0, 3);
          const isCurrentUserInTop3 = topUsers.some(u => u.name === userData?.name);

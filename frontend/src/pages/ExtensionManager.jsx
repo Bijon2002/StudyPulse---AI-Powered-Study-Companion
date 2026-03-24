@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, ShieldAlert, ShieldCheck, Globe, Plus, Trash2, Zap, Save } from 'lucide-react';
-import axios from 'axios';
+import api from '../utils/api';
 
 export default function ExtensionManager() {
   const [allowlist, setAllowlist] = useState([]);
@@ -16,7 +16,7 @@ export default function ExtensionManager() {
 
   const fetchSettings = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/settings/allowlist');
+      const res = await api.get('/api/settings/allowlist');
       if (res.data.allowlist) setAllowlist(res.data.allowlist);
     } catch (err) {
       console.error('Failed to load extension settings:', err);
@@ -25,7 +25,7 @@ export default function ExtensionManager() {
 
   const fetchActivity = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/activity');
+      const res = await api.get('/api/activity');
       if (res.data.sessions) setSessions(res.data.sessions);
     } catch (err) {
       console.error('Failed to load extension activity:', err);
@@ -35,7 +35,7 @@ export default function ExtensionManager() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      await axios.post('http://localhost:5000/api/settings/allowlist', { allowlist });
+      await api.post('/api/settings/allowlist', { allowlist });
       
       // Ping the deeply-integrated browser extension content.js 
       window.postMessage({ type: 'SYNC_EXTENSION_SETTINGS' }, '*');

@@ -5,6 +5,7 @@ import { getUser, getStats, getUserSessions, logout, updateUser } from '../utils
 import { badges } from '../data/badges';
 import { getBadges } from '../utils/storage';
 import Avatar from '../components/Avatar';
+import api from '../utils/api';
 
 export default function Profile({ onLogout }) {
   const [user, setUser] = useState(null);
@@ -47,17 +48,9 @@ export default function Profile({ onLogout }) {
         setUser(updatedUser);
         
         // Update backend if possible
-        const token = localStorage.getItem('studypulse_token');
-        if (token) {
-          fetch('http://localhost:5000/api/auth/profile', {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-auth-token': token
-            },
-            body: JSON.stringify({ profilePic: base64String })
-          }).catch(err => console.error('Failed to sync profile pic with backend:', err));
-        }
+        // Update backend
+        api.put('/api/auth/profile', { profilePic: base64String })
+           .catch(err => console.error('Failed to sync profile pic with backend:', err));
       };
       reader.readAsDataURL(file);
     }

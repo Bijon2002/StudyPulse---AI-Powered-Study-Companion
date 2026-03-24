@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Trophy, Award, MessageSquare, Heart, Shield, Star, Globe } from 'lucide-react';
-import axios from 'axios';
+import api from '../utils/api';
 
 export default function Community() {
   const [leaderboard, setLeaderboard] = useState([]);
@@ -10,7 +10,7 @@ export default function Community() {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/users/leaderboard');
+        const response = await api.get('/api/users/leaderboard');
         const enrichedUsers = response.data.map((user, i) => {
           const colors = ['bg-yellow-500', 'bg-slate-300', 'bg-orange-400', 'bg-indigo-500', 'bg-blue-500', 'bg-pink-500', 'bg-emerald-500'];
           return {

@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, Mail, Lock, Zap } from 'lucide-react';
 import { saveUser } from '../utils/storage';
+import api from '../utils/api';
 
 export default function Login({ onLogin, onSwitchToRegister }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -17,16 +18,17 @@ export default function Login({ onLogin, onSwitchToRegister }) {
       return;
     }
 
-    // Mock authentication - in production, use Firebase
-    const users = JSON.parse(localStorage.getItem('studypulse_users') || '[]');
-    const user = users.find(u => u.email === email && u.password === password);
-
-    if (user) {
-      const { password: _, ...userWithoutPassword } = user;
-      saveUser(userWithoutPassword);
-      onLogin(userWithoutPassword);
-    } else {
-      setError('Invalid email or password');
+    try {
+      const response = await api.post('/api/auth/login', { email, password });
+      const { token, user } = response.data;
+      
+      // Save token for the interceptor
+      localStorage.setItem('studypulse_token', token);
+      
+      saveUser(user);
+      onLogin(user);
+    } catch (err) {
+      setError(err.response?.data?.msg || 'Invalid email or password');
     }
   };
 
