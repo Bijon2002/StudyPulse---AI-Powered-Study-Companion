@@ -4,6 +4,12 @@ StudyPulse is a high-performance, intelligent study ecosystem designed to boost 
 
 ![StudyPulse Header](https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=2071)
 
+---
+
+## 🌐 Live Demo & API
+*   **Web Dashboard**: [https://studypulse.sa24610209.workers.dev/](https://studypulse.sa24610209.workers.dev/)
+*   **Backend API**: [https://studypulse-ai-powered-study-companion.onrender.com](https://studypulse-ai-powered-study-companion.onrender.com)
+
 ## 🚀 Key Features
 
 ### 🛡️ Focus Guardian & Extension
@@ -37,7 +43,7 @@ StudyPulse is a high-performance, intelligent study ecosystem designed to boost 
 | **Backend** | Node.js, Express, MongoDB Atlas, Mongoose |
 | **AI Layer** | Pollinations.ai (Free unauthenticated API) |
 | **Extension** | Chrome Extension API, Javascript (Manifest V3) |
-| **Deployment** | Vercel (Frontend), Render/DigitalOcean (Backend Suggestion) |
+| **Deployment** | Cloudflare Pages (Frontend), Render (Backend) |
 
 ---
 
